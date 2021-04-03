@@ -822,6 +822,8 @@ def generate_appraisal_lists(request):
 
     active_apps = Appraisal.objects.filter(applicant=request.user).exclude(status='rejected').exclude(status='accepted').order_by('-timestamp')
     archive_apps = Appraisal.objects.filter(applicant=request.user).exclude(status='requested').order_by('-timestamp')
+    request_active = (AppraisalRequest.objects.filter(appraisal__applicant=request.user).filter(appraisal__status='requested'))
+    request_archived = (AppraisalRequest.objects.filter(appraisal__applicant=request.user).exclude(appraisal__status='requested'))
 
     response.update({
             'user_courses': user_courses,
@@ -835,7 +837,9 @@ def generate_appraisal_lists(request):
             'achievments': achievments,
             'events': events,
             'appraisal_active_apps':active_apps,
-            'appraisal_archive_apps':archive_apps
+            'appraisal_archive_apps':archive_apps,
+            'appraisal_requests_active':request_active,
+            'appraisal_requests_archived':request_archived
     })
 
     return response
@@ -845,7 +849,7 @@ def generate_appraisal_lists_hod(request):
 
     response = {}
     review_apps_hod = AppraisalRequest.objects.filter(hod = request.user).exclude(status_hod = 'rejected').exclude(status_hod = 'accepted')
-    archived_apps_hod = AppraisalRequest.objects.filter(hod = request.user).exclude(status_hod = 'pending')
+    reviewed_apps_hod = AppraisalRequest.objects.filter(hod = request.user).exclude(status_hod = 'pending')
     course_objects_all = Curriculum_Instructor.objects.all()
     consultancy_projects_all = emp_consultancy_projects.objects.all()
     research_projects_all = emp_research_projects.objects.all()
@@ -856,9 +860,11 @@ def generate_appraisal_lists_hod(request):
     publications_all = emp_published_books.objects.all()
     conferences_all = emp_confrence_organised.objects.all()
     achievments_all = emp_achievement.objects.all()
+    appraisal_all = Appraisal.objects.all()
 
     response.update({
-        'archived_apps_hod': archived_apps_hod,
+        'hod': True,
+        'reviewed_apps_hod': reviewed_apps_hod,
         'course_objects_all': course_objects_all,
         'review_apps_hod': review_apps_hod,
         'thesis_all': thesis_all,
@@ -869,7 +875,8 @@ def generate_appraisal_lists_hod(request):
         'conferences_all': conferences_all,
         'achievments_all': achievments_all,
         'consultancy_projects_all': consultancy_projects_all,
-        'research_projects_all': research_projects_all
+        'research_projects_all': research_projects_all,
+        'appraisal_all': appraisal_all
     })
     return response
 
@@ -877,7 +884,7 @@ def generate_appraisal_lists_hod(request):
 def generate_appraisal_lists_director(request):
     response = {}
     review_apps_director = AppraisalRequest.objects.filter(director = request.user).exclude(status_hod = 'rejected').exclude(status_hod = 'pending').exclude(status_director = 'rejected').exclude(status_director = 'accepted')
-    archived_apps_director = AppraisalRequest.objects.filter(director = request.user).exclude(status_director = 'pending')
+    reviewed_apps_director = AppraisalRequest.objects.filter(director = request.user).exclude(status_director = 'pending')
     course_objects_all = Curriculum_Instructor.objects.all()
     consultancy_projects_all = emp_consultancy_projects.objects.all()
     research_projects_all = emp_research_projects.objects.all()
@@ -888,11 +895,13 @@ def generate_appraisal_lists_director(request):
     publications_all = emp_published_books.objects.all()
     conferences_all = emp_confrence_organised.objects.all()
     achievments_all = emp_achievement.objects.all()
+    appraisal_all = Appraisal.objects.all()
 
     response.update({
+        'director': True,
         'course_objects_all': course_objects_all,
         'review_apps_director': review_apps_director,
-        'archived_apps_director': archived_apps_director,
+        'reviewed_apps_director': reviewed_apps_director,
         'thesis_all': thesis_all,
         'events_all': events_all,
         'patents_all': patents_all,
@@ -901,7 +910,8 @@ def generate_appraisal_lists_director(request):
         'conferences_all': conferences_all,
         'achievments_all': achievments_all,
         'consultancy_projects_all': consultancy_projects_all,
-        'research_projects_all': research_projects_all
+        'research_projects_all': research_projects_all,
+        'appraisal_all': appraisal_all
     })
 
     return response

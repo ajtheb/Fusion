@@ -30,12 +30,12 @@
                     LTC Management
                     <i class="right floated chevron right icon"></i>
                 </a>
-                {% comment %}
+
                 <a class="item" data-tab="third">
                     APR / Appraisals
                     <i class="right floated chevron right icon"></i>
                 </a>
-                {% endcomment %}
+
                 <a class="item" data-tab="fourth">
                     Create Payroll Slip
                     <i class="right floated chevron right icon"></i>
@@ -50,11 +50,11 @@
         <div class="eight wide column">
             <div class="ui active  tab segment" data-tab="first">
                 {% block cpda %}
-                    {% if admin %}
+                    <!-- {% if admin %}
                         {% include 'establishment/cpda_admin.html' %}
-                    {% else %}
-                        {% include 'establishment/cpda.html' %}
-                    {% endif %}
+                    {% else %} -->
+                    {% include 'establishment/cpda.html' %}
+                    <!-- {% endif %} -->
                 {% endblock %}
             </div>
             <div class="ui tab segment" data-tab="second">
@@ -66,13 +66,19 @@
                     {% endif %}
                 {% endblock %}
             </div>
-            {% comment %}
+
             <div class="ui tab segment" data-tab="third">
                 {% block appraisal %}
-                    {% include 'establishment/appraisal.html' %}
+                    {% if hod %}
+                        {% include 'establishment/appraisal_hod.html' %}
+                    {% elif director %}
+                        {% include 'establishment/appraisal_director.html' %}
+                    {% else %}
+                        {% include 'establishment/appraisal.html' %}
+                    {% endif %}
                 {% endblock %}
             </div>
-            {% endcomment %}
+
             <div class="ui tab segment" data-tab="fourth">
                 {% block payroll_slip %}
                     {% include 'establishment/payroll_slip.html' %}
