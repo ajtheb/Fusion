@@ -36,9 +36,10 @@ def is_hod(request):
     user_dsg = list(HoldsDesignation.objects.filter(user=request.user))
     if(len(user_dsg)==0):
         return False
-    designation = user_dsg[0].designation.name
-    if("HOD" in designation):
-        return True
+    desg = [des.designation.name for des in user_dsg]
+    for d in desg:
+        if("HOD" in d):
+            return True
     return False
 
 def is_registrar(request):
@@ -48,9 +49,10 @@ def is_registrar(request):
     user_dsg = list(HoldsDesignation.objects.filter(user=request.user))
     if(len(user_dsg)==0):
         return False
-    designation = user_dsg[0].designation.name
-    if("Registrar" in designation):
-        return True
+    desg = [des.designation.name for des in user_dsg]
+    for d in desg:
+        if("Registrar" in d):
+            return True
     return False
 
 def is_director(request):
@@ -60,9 +62,10 @@ def is_director(request):
     user_dsg = list(HoldsDesignation.objects.filter(user=request.user))
     if(len(user_dsg)==0):
         return False
-    designation = user_dsg[0].designation.name
-    if("Director" in designation):
-         return True
+    desg = [des.designation.name for des in user_dsg]
+    for d in desg:
+        if("Director" in d):
+            return True
     return False
 
 def is_cpda(dictx):
