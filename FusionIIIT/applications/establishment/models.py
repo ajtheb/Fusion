@@ -56,7 +56,7 @@ class Cpda_application(models.Model):
 
     # CPDA Request fields
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
-    pf_number = models.CharField(max_length=50, default='')
+    pf_number = models.CharField(max_length=50, default='1',null=True)
     purpose = models.CharField(max_length=500, default='', blank=True)
     requested_advance = models.IntegerField(blank=True)
     request_timestamp = models.DateTimeField(auto_now=True, null=True)

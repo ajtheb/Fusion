@@ -35,9 +35,7 @@ Y8b  d8 88      88  .8D 88   88      88 `88. 88.     `8P  d8' 88b  d88 88.     d
         <div class="description">
             <form class="ui large form" method="post" enctype="multipart/form-data" id="form1">
                 {% csrf_token %}
-                <div class="field">
-                    {% render_field cpda_form.pf_number %}
-                </div>
+                
                 <br>
                 <div class="field">
                     {% render_field cpda_form.purpose %}
@@ -212,10 +210,8 @@ Y8b  d8 88      88  .8D 88   88      88   88 88 `88. Y8b  d8 88   88   .88.    `
                                 <label>PF Number : {{ app.pf_number }}</label><br>
                                 <label>Requested Advance : {{ app.requested_advance }}</label><br>
                                 <label>Purpose : {{ app.purpose }}</label><br>
-                                <label>Remarks from Est. Admin. : {{app.tracking_info.remarks}}</label><br>
-                                <label>Remarks from HOD : {{app.tracking_info.remarks_rev1}}</label><br>
-                                <label>Remarks from Registrar : {{app.tracking_info.remarks_rev2}}</label><br>
-                                <label>Remarks from Director : {{app.tracking_info.remarks_rev3}}</label><br>
+                                <label>Remarks from HR Admin : {{app.tracking_info.remarks}}</label><br>
+                                
 
                                 {% if app.status == 'finished' %}
                                     <label>Adjustment Amount : {{ app.adjustment_amount }}</label><br>
@@ -288,17 +284,15 @@ Y8b  d8 88      88  .8D 88   88      88   88 88 `88. Y8b  d8 88   88   .88.    `
                                     <label>Adjustment Amount : ₹ {{app.adjustment_amount}}</label><br>
                                     <label>Total Bills Amount : ₹ {{app.total_bills_amount}}</label><br>
                                 {% endif %}
-                                <label>Remarks from Est. Admin. : {{app.tracking_info.remarks}}</label><br>
-                                <label>Remarks from HOD : {{app.tracking_info.remarks_rev1}}</label><br>
-                                <label>Remarks from Registrar : {{app.tracking_info.remarks_rev2}}</label><br>
-                                <label>Remarks from Director : {{app.tracking_info.remarks_rev3}}</label><br>
+                                <label>Remarks from HR Admin. : {{app.tracking_info.remarks}}</label><br>
+                    
                                 {% render_field app.reviewform.app_id %}
                                 <div class="field">
                                     {% render_field app.reviewform.remarks %}
                                 </div>
                                 <br>
                                 <button type="submit" name="cpda_review" class="ui large primary button">
-                                    Forward
+                                    Approve
                                 </button>
                                 <button type="submit" name="cpda_reject" class="ui large primary button">
                                     Reject
@@ -330,9 +324,8 @@ Y8b  d8 88      88  .8D 88   88      88   88 88 `88. Y8b  d8 88   88   .88.    `
                             {% endif %}
                             <div class="meta"> Purpose : {{app.purpose}}</div>
 
-                                <div class="meta"><label>Remarks from HOD : {{app.tracking_info.remarks_rev1}}</label></div>
-                                <div class="meta"><label>Remarks from Registrar : {{app.tracking_info.remarks_rev2}}</label></div>
-                                <div class="meta"><label>Remarks from Director : {{app.tracking_info.remarks_rev3}}</label></div><br>
+                                <div class="meta"><label>Your Remarks : {{app.tracking_info.remarks_rev1}}</label></div>
+                                
 
                         </div>
                     </div>

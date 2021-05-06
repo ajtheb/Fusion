@@ -34,20 +34,10 @@ pending cpda applications
                                 <span>Requested Advance : ₹ {{app.requested_advance}}</span>
                             </div>
                             <div class="meta"> Purpose : {{app.purpose}}</div>
-                            {% if app.tracking_info.review_status == 'reviewed' %}
-                            <div class="meta"> Reviewer remarks : {{app.tracking_info.remarks}}</div>
-                            {% endif %}
+                            
                             <div>
                                 <button class="ui large primary button" onclick="$('.ui.modal.assign_cpda-{{app.id}}').modal('show')">
-                                    {% if app.tracking_info.review_status == 'reviewed' %}
-                                        {% if app.status == 'adjustments_pending' %}
-                                        Finish
-                                        {% else %}
-                                        Approve/Reject
-                                        {% endif %}
-                                    {% else %}
-                                        Assign reviewer
-                                    {% endif %}
+                                    View
                                 </button>
                             </div>
                         </div>
@@ -56,15 +46,7 @@ pending cpda applications
                     <div class="ui modal assign_cpda-{{app.id}}">
                         <i class="close icon"></i>
                         <div class="header">
-                            {% if app.tracking_info.review_status == 'reviewed' %}
-                                {% if app.status == 'adjustments_pending' %}
-                                    Finish
-                                {% else %}
-                                Approve/Reject
-                            {% endif %}
-                            {% else %}
-                                Assign reviewer
-                            {% endif %}
+                            Submit
                         </div>
                         <div class="content">
                             <div class="description">
@@ -81,6 +63,10 @@ pending cpda applications
                                     
                                     <br>
                                     {% if app.tracking_info.review_status == 'to_assign' %}
+                                    {% else %}
+                                        <label>Remarks from {{app.tracking_info.reviewer_design}}  : {{app.tracking_info.remarks_rev1}}</label><br>
+                                        <br>
+                                    {% endif %}
                                     <div class="field">
                                         {% render_field app.assign_form.reviewer_id %} 
                                     </div>
@@ -88,34 +74,14 @@ pending cpda applications
                                     <div class="field">
                                         {% render_field app.assign_form.reviewer_design %} 
                                     </div>
-                                    <br>
                                     <div class="field">
-                                        {% render_field app.assign_form.reviewer_id2 %} 
-                                    </div>
-                                    <br>
-                                    <div class="field">
-                                        {% render_field app.assign_form.reviewer_design2 %} 
-                                    </div>
-                                    <br>
-                                    <div class="field">
-                                        {% render_field app.assign_form.reviewer_id3 %} 
-                                    </div>
-                                    <br>
-                                    <div class="field">
-                                        {% render_field app.assign_form.reviewer_design3 %}
+                                        
                                         <div class="field">
-                                            {% render_field app.assign_form.assign_status %} 
+                                            {% render_field app.assign_form.status %} 
                                         </div> 
                                     </div>
                                     <br>
-                                    {% else %}
-                                        <label>Remarks from HOD : {{app.tracking_info.remarks_rev1}}</label><br>
-                                        <label>Remarks from Registrar : {{app.tracking_info.remarks_rev2}}</label><br>
-                                        <label>Remarks from Director : {{app.tracking_info.remarks_rev3}}</label><br><br>
-                                        <div class="field">
-                                            {% render_field app.assign_form.accept_status %} 
-                                        </div>
-                                    {% endif %}
+                                    
                                     <br>
                                     
                                     <div class="field">
@@ -123,15 +89,7 @@ pending cpda applications
                                     </div>
                                     <br>
                                     <button type="submit" name="cpda_assign_form" class="ui large primary button">
-                                        {% if app.tracking_info.review_status == 'reviewed' %}
-                                            {% if app.status == 'adjustments_pending' %}
-                                            Finish
-                                            {% else %}
-                                            Approve/Reject
-                                            {% endif %}
-                                        {% else %}
-                                            Assign reviewer
-                                        {% endif %}
+                                        Submit
                                     </button>
                                 </form>
                             </div>
@@ -227,7 +185,7 @@ under_review cpda applications
                                     {% csrf_token %}
                                     {% render_field app.assign_form.app_id %} 
                                     <div class="field">
-                                        {% render_field app.assign_form.assign_status %} 
+                                        {% render_field app.assign_form.status %} 
                                     </div>
                                     <br>
                                     <div class="field">
@@ -238,25 +196,9 @@ under_review cpda applications
                                         {% render_field app.assign_form.reviewer_design %} 
                                     </div>
                                     <br>
-                                    <div class="field">
-                                        {% render_field app.assign_form.reviewer_id2 %} 
-                                    </div>
-                                    <br>
-                                    <div class="field">
-                                        {% render_field app.assign_form.reviewer_design2 %} 
-                                    </div>
-                                    <br>
-                                    <div class="field">
-                                        {% render_field app.assign_form.reviewer_id3 %} 
-                                    </div>
-                                    <br>
-                                    <div class="field">
-                                        {% render_field app.assign_form.reviewer_design3 %} 
-                                    </div>
-                                    <br>
 
                                     <button type="submit" name="cpda_assign_form" class="ui large primary button">
-                                        Assign Reviewer
+                                        Submit
                                     </button>
                                 </form>
                             </div>
