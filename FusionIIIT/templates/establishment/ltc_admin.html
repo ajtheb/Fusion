@@ -391,7 +391,6 @@ reviewed ltc applications
                                 <span>Requested Advance : ₹ {{app.requested_advance}}</span>
                             </div>
                             <div class="meta"> Purpose : {{app.purpose}}</div>
-                            <div class="meta"> Remarks by Reviewer : {{app.tracking_info.remarks}}</div>
                             <div>
                                 <button class="ui large primary button" onclick="$('.ui.modal.assign_ltc-{{app.id}}').modal('show')">
                                     View
@@ -480,7 +479,19 @@ reviewed ltc applications
                                     {% render_field app.assign_form.app_id %}
 
                                     <div class="field">
-                                        Remarks from {{ app.tracking_info.reviewer_design }} : {{ app.tracking_info.remarks }}
+                                        {% for key, value in remarks_list.items %}    
+                                        {% if key == app %}
+                                            {% for x in value %}
+                                            Remarks from 
+                                            {% for y in x %}
+                                            {{y}}&emsp; &emsp;
+                                            {% endfor %}
+                                            <br>             
+                                            {% endfor %}
+                                            {%endif%}
+                                        {% endfor %}
+                                        
+                                        <br>
                                     </div>
 
                                     <br>
@@ -537,6 +548,7 @@ archived ltc applications
                                 <span>Requested Advance : ₹ {{app.requested_advance}}</span>
                             </div>
                             <div class="meta"> Purpose : {{app.purpose}}</div>
+                            <div class="meta"> Your Remarks : {{app.tracking_info.admin_remarks}}</div>
                             <div>
                                 <button class="ui large primary button" onclick="$('.ui.modal.view_ltc-{{app.id}}').modal('show')">
                                     View

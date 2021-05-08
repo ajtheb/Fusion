@@ -298,6 +298,7 @@
                                 <span>Requested Advance : ₹ {{app.requested_advance}}</span>
                             </div>
                             <div class="meta"> Purpose : {{app.purpose}}</div>
+                            <div class="meta"> Remarks from HR Admin : {{app.tracking_info.admin_remarks}}</div>
                             <div>
                                 <button class="ui large primary button" onclick="$('.ui.modal.view_ltc-{{app.id}}').modal('show')">
                                     View
@@ -561,9 +562,6 @@
                                         <label>Requested advance : {{ app.requested_advance }}</label>
                                     </div>
                                 </div>
-
-                                <label>Remarks from Est. Admin. : {{app.tracking_info.remarks}}</label><br>
-
                                 {% render_field app.reviewform.app_id %}
                                 <div class="field">
                                     {% render_field app.reviewform.remarks %}

@@ -122,8 +122,13 @@ def handle_cpda_admin(request):
             application.tracking_info.current_reviewer_id=1
             application.tracking_info.reviewer_id = reviewer_id
             application.tracking_info.reviewer_design = reviewer_design
+            # treat remarks_Rev3 as concatenated rev designation string
+            if(application.tracking_info.remarks_rev3 is None):
+                application.tracking_info.remarks_rev3=str(reviewer_design)+"#$*&"
+            else:
+                application.tracking_info.remarks_rev3=application.tracking_info.remarks_rev3+str(reviewer_design)+"#$*&"
             application.tracking_info.remarks = remarks
-            application.tracking_info.remarks_rev1="Not reviewed yet"
+            #application.tracking_info.remarks_rev1="Not reviewed yet"
             application.tracking_info.review_status = 'under_review'
             application.status=status
             application.tracking_info.save()
@@ -174,8 +179,11 @@ def handle_ltc_admin(request):
                     reviewer_design = reviewer_design[0]
                 application = Ltc_application.objects.select_related('applicant').get(id=app_id)
                 application.tracking_info.reviewer_id = reviewer_id
-                application.tracking_info.reviewer_design = reviewer_design
-                application.tracking_info.remarks = remarks
+                if(application.tracking_info.designations is None):
+                    application.tracking_info.designations = str(reviewer_design)+"#$*&"
+                else:
+                    application.tracking_info.designations = str(application.tracking_info.designations)+str(reviewer_design)+"#$*&"
+                application.tracking_info.admin_remarks = remarks
                 application.tracking_info.review_status = 'under_review'
                 application.tracking_info.save()
                 # add notif
@@ -340,15 +348,24 @@ def generate_cpda_admin_lists(request):
                     .exclude(status='adjustments_pending')
                     .order_by('-request_timestamp'))
 
+    reviewer_remarks={}
+    for app in pending_apps:
+        rev_list=[]
+        remarks=app.tracking_info.remarks_rev2.split('#$*&')
+        desig=app.tracking_info.remarks_rev3.split('#$*&')
+        for i in range(len(remarks)):
+            if(remarks[i]!=''):
+                rev_list.append([desig[i],remarks[i]])
+        reviewer_remarks[app.tracking_info.application]=rev_list
     response = {
         'admin': True,
         'cpda_pending_apps': pending_apps,
         'cpda_under_review_apps': under_review_apps,
         'cpda_approved_apps': approved_apps,
-        'cpda_archived_apps': archived_apps
+        'cpda_archived_apps': archived_apps,
+        'remarks_list':reviewer_remarks
     }
     return response
-
 
 def generate_ltc_admin_lists(request):
     """
@@ -443,7 +460,17 @@ def generate_ltc_admin_lists(request):
         user.edit_form = temp
 
     new_ltc_eligible_user =  Ltc_Eligible_Form()
-
+    reviewer_remarks={}
+    for app in pending_apps:
+        rev_list=[]
+        if(app.tracking_info.remarks is None):
+            break
+        remarks=app.tracking_info.remarks.split('#$*&')
+        desig=app.tracking_info.designations.split('#$*&')
+        for i in range(len(remarks)):
+            if(remarks[i]!=''):
+                rev_list.append([desig[i],remarks[i]])
+        reviewer_remarks[app.tracking_info.application]=rev_list
     response = {
         'admin': True,
         'ltc_eligible_users': current_eligible_users,
@@ -459,7 +486,8 @@ def generate_ltc_admin_lists(request):
         'dependent_under_review': depend_under_review,
         'ltc_availed_archive': availed_archive,
         'ltc_to_avail_archive': to_avail_archive,
-        'dependent_archive': depend_archive
+        'dependent_archive': depend_archive,
+        'remarks_list':reviewer_remarks
     }
     return response
 
@@ -532,6 +560,10 @@ def handle_cpda_eligible(request):
         review_comment = request.POST.get('remarks')
         application = Cpda_application.objects.get(id=app_id)
         application.tracking_info.remarks_rev1 = review_comment
+        if(application.tracking_info.remarks_rev2 is None):
+            application.tracking_info.remarks_rev2 =str(review_comment)+"#$*&"
+        else:
+            application.tracking_info.remarks_rev2 =application.tracking_info.remarks_rev2+str(review_comment)+"#$*&"
         application.tracking_info.review_status = 'reviewed'
         application.tracking_info.current_reviewer_id +=1
         application.tracking_info.save()
@@ -544,6 +576,10 @@ def handle_cpda_eligible(request):
         review_comment = request.POST.get('remarks')
         application = Cpda_application.objects.get(id=app_id)
         application.tracking_info.remarks_rev1 = review_comment +"(Rejected)"
+        if(application.tracking_info.remarks_rev2 is None):
+            application.tracking_info.remarks_rev2 =str(review_comment)+"(Rejected)"+"#$*&"
+        else:
+            application.tracking_info.remarks_rev2 =application.tracking_info.remarks_rev2+str(review_comment)+"(Rejected)"+"#$*&"
         application.tracking_info.review_status = 'reviewed'
         application.tracking_info.save()
         # add notif here
@@ -665,7 +701,10 @@ def handle_ltc_eligible(request):
         # verify that app_id is not changed, ie untampered
         review_comment = request.POST.get('remarks')
         application = Ltc_application.objects.get(id=app_id)
-        application.tracking_info.remarks = review_comment
+        if(application.tracking_info.remarks is None):
+            application.tracking_info.remarks =str(review_comment)+"#$*&"
+        else:
+            application.tracking_info.remarks = str(application.tracking_info.remarks)+str(review_comment)+"#$*&"
         application.tracking_info.review_status = 'reviewed'
         application.tracking_info.save()
         # add notif here
