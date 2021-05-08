@@ -152,8 +152,10 @@ class Ltc_tracking(models.Model):
     application = models.OneToOneField(Ltc_application, primary_key=True, related_name='tracking_info',on_delete=models.CASCADE)
     reviewer_id = models.ForeignKey(User, null = True, blank=True, on_delete=models.CASCADE)
     reviewer_design = models.ForeignKey(Designation, null=True, blank=True, on_delete=models.CASCADE)
-    remarks = models.CharField(max_length=250, null=True, blank=True)
+    designations=  models.CharField(max_length=300, null=True, blank=True)
+    remarks = models.CharField(max_length=300, null=True, blank=True)
     review_status = models.CharField(max_length=20, null=True, choices=Constants.REVIEW_STATUS)
+    admin_remarks=models.CharField(max_length=300, null=True, blank=True)
 
     def __str__(self):
         return 'ltc id ' + str(self.application.id) + ' tracking'
